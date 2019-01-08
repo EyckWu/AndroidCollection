@@ -3,6 +3,9 @@ package com.eyckwu.systemutil.net;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.telephony.TelephonyManager;
 
 /**
  * Create by eyckwu on 2019/1/2.
@@ -80,5 +83,160 @@ public class NetworkUtils {
         return getCurrentNetworkState(context) == NetworkInfo.State.DISCONNECTING;
     }
 
+    /**
+     * 是否被挂起
+     * @param context
+     * @return
+     */
+    public static boolean isSuspendedBuState(Context context){
+        return NetworkInfo.State.SUSPENDED == getCurrentNetworkState(context);
+    }
 
+    /**
+     * 未知网络类型
+     * @param context
+     * @return
+     */
+    public static boolean isUnknownByState(Context context){
+        return NetworkInfo.State.UNKNOWN == getCurrentNetworkState(context);
+    }
+
+    /**
+     * 是否是蓝牙
+     * @param context
+     * @return
+     */
+    public static boolean isBluetoothByType(Context context){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2){
+            return false;
+        }else {
+            return ConnectivityManager.TYPE_BLUETOOTH == getCurrentNetworkType(context)
+        }
+    }
+
+    /**
+     * 是否为虚拟网络
+     * @param context
+     * @return
+     */
+    public static boolean isDummyByState(Context context){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2){
+            return false;
+        }else {
+            return ConnectivityManager.TYPE_DUMMY == getCurrentNetworkType(context);
+        }
+    }
+
+    /**
+     * 以太网类型
+     * @param context
+     * @return
+     */
+    public static boolean isEthernetByType(Context context){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2){
+            return false;
+        }else {
+            return ConnectivityManager.TYPE_ETHERNET == getCurrentNetworkType(context);
+        }
+    }
+
+    /**
+     * 移动网络类型
+     * @param context
+     * @return
+     */
+    public static boolean isMobileByType(Context context){
+        return ConnectivityManager.TYPE_MOBILE == getCurrentNetworkType(context);
+    }
+
+    /**
+     * wifi类型
+     * @param context
+     * @return
+     */
+    public static boolean isWifiByType(Context context){
+        return ConnectivityManager.TYPE_WIFI == getCurrentNetworkType(context);
+    }
+
+    /**
+     * cdma
+     * @param context
+     * @return
+     */
+    public static boolean isCDMABySubtype(Context context){
+        return TelephonyManager.NETWORK_TYPE_CDMA == getCurrentNetworkSubtype(context);
+    }
+
+    /**
+     * gprs
+     * @param context
+     * @return
+     */
+    public static boolean isGPRSBySubtype(Context context){
+        return TelephonyManager.NETWORK_TYPE_GPRS == getCurrentNetworkSubtype(context);
+    }
+
+    /**
+     * lte
+     * @param context
+     * @return
+     */
+    public static boolean isLTEBySubtype(Context context){
+        return TelephonyManager.NETWORK_TYPE_LTE == getCurrentNetworkSubtype(context);
+    }
+
+    /**
+     * 未知网络类型
+     * @param context
+     * @return
+     */
+    public static boolean isUnknownBySubtype(Context context){
+        return TelephonyManager.NETWORK_TYPE_UNKNOWN == getCurrentNetworkSubtype(context);
+    }
+
+    /**
+     * 获取WiFi状态
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    public static int getWifiState(Context context) throws Exception {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager != null){
+            return wifiManager.getWifiState();
+        }else {
+            throw new Exception("wifi device not found!");
+        }
+    }
+
+    /**
+     * wifi是否打开
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    public static boolean isWifiOpen(Context context) throws Exception {
+        int wifiState = getWifiState(context);
+        return WifiManager.WIFI_STATE_ENABLED == wifiState || WifiManager.WIFI_STATE_ENABLING == wifiState;
+    }
+
+    /**
+     * 设置WiFi状态
+     * @param context
+     * @param enable
+     * @return
+     * @throws Exception
+     */
+    public static boolean setWifiEnabled(Context context, boolean enable) throws Exception {
+        if (isWifiOpen(context) != enable){
+            ((WifiManager)context.getSystemService(Context.WIFI_SERVICE)).setWifiEnabled(enable);
+        }
+        return true;
+    }
+
+//    public static boolean isMobileNetworkOpen(Context context){
+//        boolean result = false;
+//        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+//    }
 }
