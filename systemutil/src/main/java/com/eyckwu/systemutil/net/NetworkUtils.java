@@ -110,7 +110,7 @@ public class NetworkUtils {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2){
             return false;
         }else {
-            return ConnectivityManager.TYPE_BLUETOOTH == getCurrentNetworkType(context)
+            return ConnectivityManager.TYPE_BLUETOOTH == getCurrentNetworkType(context);
         }
     }
 
